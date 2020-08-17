@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-</LinearLayout>
+    <data>
+
+        <variable
+            name="userTest"
+            type="com.geen.jetpacklearning.bean.UserInfo" />
+
+        <variable
+            name="aty"
+            type="com.geen.jetpacklearning.MainActivity" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:textSize="25sp"
+            android:textColor="#ffffff"
+            tools:text = "xxxx"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            android:text="@{userTest.userName}"
+            android:onClick="@{()->aty.clickIntent()}"
+            android:background="@color/colorPrimary"
+
+            />
+
+    </RelativeLayout>
+</layout>

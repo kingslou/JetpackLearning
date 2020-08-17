@@ -3,8 +3,9 @@ package com.geen.jetpacklearning
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.geen.jetpacklearning.ui.main.MainFragment
+import com.geen.jetpacklearning.ui.main.MainViewModel
 
-class MainActivity2 : AppCompatActivity() {
+class LearnViewModelActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
