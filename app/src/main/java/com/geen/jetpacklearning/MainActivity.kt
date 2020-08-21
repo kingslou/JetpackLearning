@@ -1,12 +1,17 @@
 package com.geen.jetpacklearning
 
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.geen.jetpacklearning.bean.UserInfo
 import com.geen.jetpacklearning.databinding.ActivityMainBinding
+import kotlinx.coroutines.*
+import java.net.URL
+import java.net.URLConnection
 
 class MainActivity :AppCompatActivity(){
 
@@ -26,22 +31,39 @@ class MainActivity :AppCompatActivity(){
 
         val length = stringLengthFunc(todo("xxx"))
         Toast.makeText(this,length.toString(),Toast.LENGTH_LONG).show()
-
         userInfo = UserInfo()
-
         userInfo.userAge.set(18)
         userInfo.userName.set("xxx")
-
-
         mBinding.userTest = userInfo
-
         mBinding.aty  = this
 
+        test()
+    }
+
+
+    fun test(){
+        CoroutineScope(Dispatchers.Main).launch {
+            val bitmap = withContext(Dispatchers.IO){
+                getImageBitmap()
+            }
+            mBinding.imageView.setImageBitmap(bitmap)
+        }
+    }
+
+    fun getImageBitmap():Bitmap{
+        val url = URL("https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png")
+        val urlConnection : URLConnection = url.openConnection()
+        urlConnection.connectTimeout = 5000
+        urlConnection.connect()
+        val stream = urlConnection.getInputStream()
+        return BitmapFactory.decodeStream(stream)
     }
 
     fun clickIntent(){
         userInfo.userName.set("0000")
         Toast.makeText(this,userInfo.userName.get(),Toast.LENGTH_LONG).show()
+
+        startActivity(Intent(this,LearnViewModelActivity::class.java))
     }
 
     fun generateAnswerString(countThreshold: Int): String = if (count > countThreshold) {
