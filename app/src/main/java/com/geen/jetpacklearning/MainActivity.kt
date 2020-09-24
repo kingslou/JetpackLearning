@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -12,6 +13,7 @@ import com.geen.jetpacklearning.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 import java.net.URL
 import java.net.URLConnection
+import java.util.*
 
 class MainActivity :AppCompatActivity(){
 
@@ -38,6 +40,10 @@ class MainActivity :AppCompatActivity(){
         mBinding.aty  = this
 
         test()
+
+        Log.e("xxx","协程之后"+ Date())
+
+        MyThreadTest.notifyThreadWithVolatile()
     }
 
 
@@ -46,7 +52,15 @@ class MainActivity :AppCompatActivity(){
             val bitmap = withContext(Dispatchers.IO){
                 getImageBitmap()
             }
+
+            var def = async(Dispatchers.IO) {
+                getImageBitmap()
+            }
+
+            Log.e("xxx","请求之后"+ Date())
             mBinding.imageView.setImageBitmap(bitmap)
+
+            mBinding.imageView1.setImageBitmap(def.await())
         }
     }
 
