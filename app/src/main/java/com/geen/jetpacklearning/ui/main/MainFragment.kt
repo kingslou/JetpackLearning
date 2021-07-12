@@ -6,12 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.geen.jetpacklearning.R
+import androidx.recyclerview.widget.RecyclerView
+import com.geen.jetpacklearning.adapter.DataPageAdapter
 import com.geen.jetpacklearning.bean.UserModel
 import com.geen.jetpacklearning.databinding.MainFragmentBinding
 import kotlinx.android.synthetic.main.main_fragment.*
@@ -54,7 +53,7 @@ class MainFragment : Fragment() {
         mBinding.setClickListener {
             when (it) {
                 mBinding.message -> {
-                    userModel?.userName  = "Geen"
+                    userModel?.userName = "Geen"
                     viewModel.updateModel(userModel)
                     Toast.makeText(activity, "message", Toast.LENGTH_LONG).show()
                 }
@@ -68,5 +67,44 @@ class MainFragment : Fragment() {
             }
 
         }
+
+        initAdapter()
+
+        mBinding.mRecycleView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val range: Int = mBinding.mRecycleView.computeHorizontalScrollRange()
+                //滑块的偏移量
+                val offset: Int = mBinding.mRecycleView.computeHorizontalScrollOffset()
+                //可视区域长度
+                val extent: Int = mBinding.mRecycleView.computeHorizontalScrollExtent()
+                //滑出部分在剩余范围的比例
+                val proportion = (offset * 1.0 / (range - extent))
+                //计算滚动条宽度
+                val transMaxRange: Float = mBinding.progressParent.width.toFloat() - mBinding.viewProgress.width.toFloat()
+                //设置滚动条移动
+                mBinding.viewProgress.translationX = transMaxRange * proportion.toFloat()
+            }
+        })
+    }
+
+    private fun initAdapter(){
+
+        val mAdapter = DataPageAdapter()
+
+        val dataList = arrayListOf<String>()
+
+        for(index in 1..10){
+            dataList.add(index.toString())
+        }
+        mAdapter.setData(dataList)
+        mBinding.mRecycleView.adapter = mAdapter
+
+
     }
 }

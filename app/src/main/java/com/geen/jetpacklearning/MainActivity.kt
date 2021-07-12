@@ -11,6 +11,9 @@ import androidx.databinding.DataBindingUtil
 import com.geen.jetpacklearning.bean.UserInfo
 import com.geen.jetpacklearning.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import java.net.URL
 import java.net.URLConnection
 import java.util.*
@@ -22,6 +25,8 @@ class MainActivity :AppCompatActivity(){
     lateinit var mBinding : ActivityMainBinding;
 
     lateinit var userInfo : UserInfo
+
+    val scope = MainScope()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,12 +49,43 @@ class MainActivity :AppCompatActivity(){
         Log.e("xxx","协程之后"+ Date())
 
         MyThreadTest.notifyThreadWithVolatile()
+
+        scope.launch(Dispatchers.Main) {
+            testFlow()
+        }
+        log("flow之后")
+        var result = "-"
+        val nickName = "wrr---xxxxx---1"
+        val index = nickName.lastIndexOf("-")
+        if (index > 0) {
+            result = nickName.substring(0, index)
+        } else {
+            result = nickName
+        }
+
+        Log.e("nickName",result)
+
+    }
+
+    private fun log(str:String){
+        Log.e("Main",str)
+    }
+
+    suspend fun testFlow(){
+
+        listOf("1","2","3").asFlow().onEach {
+            delay(500)
+        }.collect {
+            log(it)
+        }
     }
 
 
     fun test(){
-        CoroutineScope(Dispatchers.Main).launch {
+        scope.launch(Dispatchers.Main) {
+            Log.e("xxx","请求之前"+ Date())
             val bitmap = withContext(Dispatchers.IO){
+                delay(2000)
                 getImageBitmap()
             }
 
@@ -64,7 +100,7 @@ class MainActivity :AppCompatActivity(){
         }
     }
 
-    fun getImageBitmap():Bitmap{
+    private fun getImageBitmap():Bitmap{
         val url = URL("https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png")
         val urlConnection : URLConnection = url.openConnection()
         urlConnection.connectTimeout = 5000
