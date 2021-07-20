@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--圆弧进度条-->
+    <declare-styleable name="CircleProgress">
+        <attr name="radius" format="dimension"/>
+        <attr name="strokeWidth" format="dimension"/>
+        <attr name="circleColor" format="color"/>
+        <attr name="ringColor" format="color"/>
+        <attr name="ringBgColor" format="color"/>
+        <!-- 按钮图标 -->
+        <attr name="thumb" format="reference"/>
+        <!-- 按钮是否可随着位置旋转 -->
+        <attr name="thumbRotatable" format="boolean"/>
+        <attr name="thumbWidth" format="dimension"/>
+        <attr name="thumbHeight" format="dimension"/>
+    </declare-styleable>
+
+</resources>

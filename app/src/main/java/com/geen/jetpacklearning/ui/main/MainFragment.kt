@@ -1,5 +1,6 @@
 package com.geen.jetpacklearning.ui.main
 
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -86,12 +87,16 @@ class MainFragment : Fragment() {
                 //滑出部分在剩余范围的比例
                 val proportion = (offset * 1.0 / (range - extent))
                 //计算滚动条宽度
-                val transMaxRange: Float = mBinding.progressParent.width.toFloat() - mBinding.viewProgress.width.toFloat()
+                val transMaxRange: Float =
+                    mBinding.progressParent.width.toFloat() - mBinding.viewProgress.width.toFloat()
                 //设置滚动条移动
                 mBinding.viewProgress.translationX = transMaxRange * proportion.toFloat()
             }
         })
     }
+
+    val mTotalProgress = 90
+    var mCurrentProgress = 0
 
     private fun initAdapter(){
 
@@ -106,5 +111,30 @@ class MainFragment : Fragment() {
         mBinding.mRecycleView.adapter = mAdapter
 
 
+        //Thread(ProgressRunnable()).start()
+
+        ValueAnimator.ofInt(0,100).apply {
+            duration = 5000
+            addUpdateListener {
+                mBinding.mProgress.setProgress(it.animatedValue as Int)
+            }
+            start()
+
+        }
+
+    }
+
+    inner class ProgressRunnable : Runnable {
+        override fun run() {
+            while (mCurrentProgress < mTotalProgress) {
+                mCurrentProgress += 1
+                mBinding.mProgress.setProgress(mCurrentProgress)
+                try {
+                    Thread.sleep(200)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 }
